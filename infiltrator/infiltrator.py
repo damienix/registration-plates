@@ -36,7 +36,8 @@ class Infiltrator:
             area = w * h
 
             # At reasonable size
-            if area < 500:
+			# this might be misleading - e.g. are we guaranteed to have a photo of a whole car, and not 800x600 plate only?
+            if area < 500:			
                 continue
 
             # Find rectangles of reasonable ratio
