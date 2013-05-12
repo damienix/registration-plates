@@ -1,8 +1,8 @@
 import sys
-from scripts import infiltrator
+from infiltrator import infiltrator
+
 
 __author__ = 'hauron'
-
 
 inf = infiltrator.Infiltrator()
 

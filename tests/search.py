@@ -1,6 +1,7 @@
 import unittest
-
 import os
+
+from infiltrator.infiltrator import Infiltrator
 
 
 def load(filename):
@@ -13,7 +14,10 @@ def load(filename):
 
 class TestSearch(unittest.TestCase):
     def setUp(self):
-        pass
+        self.infiltrator = Infiltrator()
+
+    def test1(self):
+        self.infiltrator.process('../img/model/DSC_0486.jpg')
 
 
 
