@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 class Infiltrator:
@@ -31,11 +32,7 @@ class Infiltrator:
             area = w * h
             """ Real rectangle size """
 
-            #print area
-            #Pokaze wyciety fragment. Uwaga, bo moze byc duzo tych fragmentow i bedzie spam okienek...
-            #cut_img = img[y:y + h, x:x + w]
-            #cv2.imshow('image', cut_img)
-            #cv2.waitKey(0)
+            
 
             # At reasonable size
             if area < 500:
@@ -44,6 +41,14 @@ class Infiltrator:
             # Find rectangles of reasonable ratio
             if w / h < 2.0 or w / h > 5.0:
                 continue
+
+            cut_img = img[y:y + h, x:x + w]
+            histogram = self.__calc_histogram(cut_img)
+            #uncomment those 3 for debug
+            #cv2.imshow('histogram', histogram)
+            #cv2.imshow('image', cut_img)
+            #cv2.waitKey(0)
+
 
             # Find 6-8 letters in bar TODO
 
@@ -67,3 +72,20 @@ class Infiltrator:
         #Pomniejszenie obrazka
         img = cv2.resize(img, (800, 600))
         cv2.imshow('image', img)
+        
+    def __calc_histogram(self, img):
+		h = np.zeros((300,256,3))
+		if len(img.shape)!=2:
+			im = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+			
+		hist_item = cv2.calcHist([img],[0],None,[16],[0,255])
+		
+		cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
+		hist=np.int32(np.around(hist_item))
+		
+		for x,y in enumerate(hist):
+			for i in range(0, 15):
+				cv2.line(h,(x*16+i,0),(x*16+i,y),(255,255,255))
+		
+		y = np.flipud(h)
+		return y
