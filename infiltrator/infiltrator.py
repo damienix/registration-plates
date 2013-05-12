@@ -43,9 +43,9 @@ class Infiltrator:
                 continue
 
             cut_img = img[y:y + h, x:x + w]
-            histogram = self.__calc_histogram(cut_img)
+            histogram_img, histogram = self.__calc_histogram(cut_img)
             #uncomment those 3 for debug
-            #cv2.imshow('histogram', histogram)
+            #cv2.imshow('histogram', histogram_img)
             #cv2.imshow('image', cut_img)
             #cv2.waitKey(0)
 
@@ -88,4 +88,4 @@ class Infiltrator:
 				cv2.line(h,(x*16+i,0),(x*16+i,y),(255,255,255))
 		
 		y = np.flipud(h)
-		return y
+		return y, hist
