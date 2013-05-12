@@ -6,10 +6,12 @@ class Infiltrator:
     def process(self, path):
 
         img = self.__load_image(path)
-        bar = self.__find_bars(img)
-        #self.__draw_bar(img, bar)
-        self.__show_image(img)
+        bars = self.__find_bars(img)
 
+        for bar in bars:
+            self.__draw_bar(img, bar)
+
+        self.__show_image(img)
         cv2.waitKey(0)
 
     def __load_image(self, path):
@@ -29,33 +31,26 @@ class Infiltrator:
         for contour in contours:
             # area = cv2.contourArea(contour)
             x, y, w, h = cv2.boundingRect(contour)
-            area = w * h
             """ Real rectangle size """
-
-            
+            cut_img = img[y:y + h, x:x + w]
+            area = w * h
 
             # At reasonable size
             if area < 500:
                 continue
 
             # Find rectangles of reasonable ratio
-            if w / h < 2.0 or w / h > 5.0:
+            if not 2.0 < w / h < 5.0:
                 continue
 
-            cut_img = img[y:y + h, x:x + w]
-            histogram_img, histogram = self.__calc_histogram(cut_img)
-            #uncomment those 3 for debug
-            #cv2.imshow('histogram', histogram_img)
-            #cv2.imshow('image', cut_img)
-            #cv2.waitKey(0)
-
-
             # Find 6-8 letters in bar TODO
+            if not 5 < len(self.__find_letters(cut_img)) < 9:
+                continue
 
-            # Find black on white ;) TODO paste here Jacob ;>
+            # Find black on white ;)
+            # if not self.__is_histogram_valid(cut_img):
+            #     continue
 
-            # Draw for debug
-            self.__draw_bar(img, contour)
             bars.append(contour)
 
         return bars
@@ -67,25 +62,34 @@ class Infiltrator:
         pt2 = (bound_rect[0] + bound_rect[2], bound_rect[1] + bound_rect[3])
         cv2.rectangle(img, pt1, pt2, (255, 255, 0), 2)
 
-
     def __show_image(self, img):
         #Pomniejszenie obrazka
         img = cv2.resize(img, (800, 600))
         cv2.imshow('image', img)
-        
+
+    def __find_letters(self, cut_img):
+        return [1, 1, 1, 2, 1, 1]  # TODO fake objects for now
+
     def __calc_histogram(self, img):
-		h = np.zeros((300,256,3))
-		if len(img.shape)!=2:
-			im = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-			
-		hist_item = cv2.calcHist([img],[0],None,[16],[0,255])
-		
-		cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
-		hist=np.int32(np.around(hist_item))
-		
-		for x,y in enumerate(hist):
-			for i in range(0, 15):
-				cv2.line(h,(x*16+i,0),(x*16+i,y),(255,255,255))
-		
-		y = np.flipud(h)
-		return y, hist
+        h = np.zeros((300, 256, 3))
+        if len(img.shape) != 2:
+            im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        hist_item = cv2.calcHist([img], [0], None, [16], [0, 255])
+
+        cv2.normalize(hist_item, hist_item, 0, 255, cv2.NORM_MINMAX)
+        hist = np.int32(np.around(hist_item))
+
+        for x, y in enumerate(hist):
+            for i in range(0, 15):
+                cv2.line(h, (x * 16 + i, 0), (x * 16 + i, y), (255, 255, 255))
+
+        y = np.flipud(h)
+        return y, hist
+
+    def __is_histogram_valid(self, cut_img):
+        histogram_img, histogram = self.__calc_histogram(cut_img)
+        #uncomment those 3 for debug
+        # cv2.imshow('histogram', histogram_img)
+        # cv2.imshow('image', cut_img)
+        # cv2.waitKey(0)
