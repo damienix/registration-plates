@@ -1,5 +1,6 @@
 import sys
-import infiltrator
+from scripts import infiltrator
+
 __author__ = 'hauron'
 
 
