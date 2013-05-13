@@ -1,7 +1,5 @@
 import cv2
 import qualifications
-import subprocess
-from sys import platform as _platform
     
 class Infiltrator:
     quali = qualifications.Qualifications()
@@ -10,9 +8,8 @@ class Infiltrator:
 
         img = self.__load_image(path)
         bars, cut_imgs = self.__find_bars(img)
-        for i in range(0, len(bars)):
-            self.__draw_bar(img, bars[i])
-            self.__OCR_image(cut_imgs[i])
+        for bar in bars:
+            self.__draw_bar(img, bar)
         
         self.__show_image(img, 'canny')
         cv2.moveWindow('canny', 50, 50)
@@ -28,6 +25,7 @@ class Infiltrator:
             cv2.moveWindow('laplasjan', 900, 50)
         
         cv2.waitKey(0)
+        return cut_imgs
 
     def __load_image(self, path):
         print "Opening " + path
@@ -99,26 +97,3 @@ class Infiltrator:
         #Pomniejszenie obrazka
         img = cv2.resize(img, (800, 600))
         cv2.imshow(window, img)
-
-    def __OCR_image(self, img):
-        if _platform == "win32":
-            params = list()
-            params.append(cv2.cv.CV_IMWRITE_PNG_COMPRESSION)
-            params.append(8)
-            cv2.imwrite("OCR_candidate.png", img, params)
-            
-            args = ("OCR/tesseract.exe", 'OCR_candidate.png', "out")
-                    
-            #Or just:
-            #args = "bin/bar -c somefile.xml -d text.txt -r aString -f anotherString".split()
-            popen = subprocess.Popen(args, stdout=subprocess.PIPE)
-            popen.wait()
-            output = popen.stdout.read()
-            
-            f = open('out.txt')
-            finalString = f.readline()
-            f.close()
-            print "Read plate:", finalString
-        elif _platform == "linux" or _platform == "linux2":
-            print "TODO"
-            

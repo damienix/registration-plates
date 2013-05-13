@@ -1,9 +1,14 @@
 import sys
 from infiltrator import infiltrator
+from OCR import reader
 
-
-__author__ = 'hauron'
+__author__ = 'zbiki!'
 
 inf = infiltrator.Infiltrator()
+reader = reader.Reader()
 
-inf.process(sys.argv[1], len(sys.argv)>2)
+cut_imgs = inf.process(sys.argv[1], len(sys.argv)>2)
+reader.readText(cut_imgs)
+
+
+
