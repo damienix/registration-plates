@@ -36,3 +36,5 @@ nosetests.xml
 
 # Intellij Idea Files
 .idea
+
+tesseract/OCR_candidate.png
