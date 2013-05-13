@@ -81,9 +81,9 @@ class Infiltrator:
             if not self.quali.is_histogram_valid(cut_img):
                  continue
             
-            bars.append(contour)
+            bars.append(contour)                    
+            #cut_imgs.append(self.__filter_image(cut_img, 'laplasjan'))
             cut_imgs.append(cut_img)
-
         return bars, cut_imgs
     
 
