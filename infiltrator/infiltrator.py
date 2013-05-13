@@ -49,10 +49,10 @@ class Infiltrator:
             #print "Letters: " + str(num_of_letters)
             if not 4 <= num_of_letters < 9:
                 continue
-
+            
             # Find black on white ;)
-            # if not self.__is_histogram_valid(cut_img):
-            #     continue
+            if not self.__is_histogram_valid(cut_img):
+                 continue
 
             bars.append(contour)
 
@@ -113,28 +113,43 @@ class Infiltrator:
         return letters
 
     def __calc_histogram(self, img):
-        h = np.zeros((300, 256, 3))
-        if len(img.shape) != 2:
-            im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+		
+		if len(img.shape) != 2:
+			img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+			
+		h = np.zeros((300, 256, 3))
+		cv2.equalizeHist(img)
+		hist_item = cv2.calcHist([img], [0], None, [16], [0, 255])
+		cv2.normalize(hist_item, hist_item, 0, 255, cv2.NORM_MINMAX)
+		hist = np.int32(np.around(hist_item))
 
-        hist_item = cv2.calcHist([img], [0], None, [16], [0, 255])
+		for x, y in enumerate(hist):
+			for i in range(0, 15):
+				cv2.line(h, (x * 16 + i, 0), (x * 16 + i, y), (255, 255, 255))
 
-        cv2.normalize(hist_item, hist_item, 0, 255, cv2.NORM_MINMAX)
-        hist = np.int32(np.around(hist_item))
-
-        for x, y in enumerate(hist):
-            for i in range(0, 15):
-                cv2.line(h, (x * 16 + i, 0), (x * 16 + i, y), (255, 255, 255))
-
-        y = np.flipud(h)
-        return y, hist
+		y = np.flipud(h)
+		return y, hist
 
     def __is_histogram_valid(self, cut_img):
-        histogram_img, histogram = self.__calc_histogram(cut_img)
-        #uncomment those 3 for debug
-        # cv2.imshow('histogram', histogram_img)
-        # cv2.imshow('image', cut_img)
-        # cv2.waitKey(0)
+		histogram_img, histogram = self.__calc_histogram(cut_img)
+		histogram = list(histogram)
+		
+		max_val = max(histogram)
+		count = 0
+		
+		for element in histogram:
+			if element>=0.5*max_val:
+				count+=1
+		
+		#Za duzo wysokich slupkow oznacza cos dzikiego :P
+		if count > 6:
+			#cv2.imshow('histogram', histogram_img)
+			#cv2.imshow('image', cut_img)
+			#cv2.waitKey(0)
+			print 'rejecting'
+			return False
+        
+		return True
 
     def __is_intersection(self, ax1, ay1, ax2, ay2, bx1, by1, bx2, by2):
 
