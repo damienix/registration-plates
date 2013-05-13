@@ -11,31 +11,31 @@ class Reader:
             print 'Read plate:', readStr
             
     def __OCR_image(self, img):
-        if _platform == "win32":
-            # First write the image file
-            params = list()
-            params.append(cv2.cv.CV_IMWRITE_PNG_COMPRESSION)
-            params.append(8)
-            cv2.imwrite("OCR/OCR_candidate.png", img, params)
+        
+        # First write the image file
+        params = list()
+        params.append(cv2.cv.CV_IMWRITE_PNG_COMPRESSION)
+        params.append(8)
+        cv2.imwrite("OCR/OCR_candidate.png", img, params)
             
             
-            #test -> clear image
-            self.__boldenImage("OCR/OCR_candidate.png","png")
-            
-            # Secondly run tesseract.exe and process the image
-            args = ('OCR/tesseract.exe', 'OCR/OCR_candidate.png', 'OCR/out', 'nobatch', 'letters')   
-            popen = subprocess.Popen(args, stdout=subprocess.PIPE)
-            popen.wait()
-            output = popen.stdout.read()
-            
-            # Lastly open and read the prepared recognized string
-            f = open('OCR/out.txt')
-            finalString = f.readline()
-            f.close()
-            return finalString
+        #test -> clear image
+        self.__boldenImage("OCR/OCR_candidate.png","png")
+        # Secondly run tesseract.exe and process the image
+        if _platform == "win32":             
+            args = ('OCR/tesseract.exe', 'OCR/OCR_candidate.png', 'OCR/out', 'nobatch', 'letters')  
         elif _platform == "linux" or _platform == "linux2":
-            print "TODO"
-        return 'Linux rox!'
+            args = ('/usr/bin/wine', 'OCR/tesseract.exe', 'OCR/OCR_candidate.png', 'OCR/out', 'nobatch', 'letters')
+             
+        popen = subprocess.Popen(args, stdout=subprocess.PIPE)
+        popen.wait()
+        output = popen.stdout.read()
+            
+        # Lastly open and read the prepared recognized string
+        f = open('OCR/out.txt')
+        finalString = f.readline()
+        f.close()
+        return finalString
 
     def __boldenImage(self,imagename,imageext):
         img = Image.open(imagename)
@@ -58,3 +58,4 @@ class Reader:
                     pixdata[x, y] = (255, 255, 255, 255)
 
         img.save(imagename, imageext)
+
