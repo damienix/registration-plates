@@ -5,7 +5,9 @@ from sys import platform as _platform
 class Reader:
     def readText(self, cut_imgs):
         for img in cut_imgs:
-            print "Read plate:", self.__OCR_image(img)
+            readStr = self.__OCR_image(img)
+            readStr = readStr.replace(" ", "")
+            print "Read plate:", readStr
             
     def __OCR_image(self, img):
         if _platform == "win32":
@@ -16,8 +18,6 @@ class Reader:
             
             args = ('OCR/tesseract.exe', 'OCR/OCR_candidate.png', 'OCR/out', 'nobatch', 'letters')
                     
-            #Or just:
-            #args = "bin/bar -c somefile.xml -d text.txt -r aString -f anotherString".split()
             popen = subprocess.Popen(args, stdout=subprocess.PIPE)
             popen.wait()
             output = popen.stdout.read()
