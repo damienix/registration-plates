@@ -5,15 +5,16 @@ import qualifications
 class Infiltrator:
     quali = qualifications.Qualifications()
 
-    def process(self, path, compare=False):
+    def process(self, path, compare=False, show=False):
 
         img = self.__load_image(path)
         bars, cut_imgs = self.__find_bars(img)
         for bar in bars:
             self.__draw_bar(img, bar)
 
-        self.__show_image(img, 'canny')
-        cv2.moveWindow('canny', 50, 50)
+        if show:
+            self.__show_image(img, 'canny')
+            cv2.moveWindow('canny', 50, 50)
 
         if compare:
             img2 = self.__load_image(path)
@@ -22,10 +23,12 @@ class Infiltrator:
             for bar in bars2:
                 self.__draw_bar(img2, bar)
 
-            self.__show_image(img2, 'laplasjan')
-            cv2.moveWindow('laplasjan', 900, 50)
+            if show:
+                self.__show_image(img2, 'laplasjan')
+                cv2.moveWindow('laplasjan', 900, 50)
 
-        cv2.waitKey(0)
+        if show:
+            cv2.waitKey(0)
         return cut_imgs
 
     def __load_image(self, path):
