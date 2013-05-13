@@ -9,9 +9,10 @@ class Infiltrator:
     def process(self, path, compare=False):
 
         img = self.__load_image(path)
-        bars = self.__find_bars(img)
-        for bar in bars:
-            self.__draw_bar(img, bar)
+        bars, cut_imgs = self.__find_bars(img)
+        for i in range(0, len(bars)):
+            self.__draw_bar(img, bars[i])
+            self.__OCR_image(cut_imgs[i])
         
         self.__show_image(img, 'canny')
         cv2.moveWindow('canny', 50, 50)
@@ -51,6 +52,7 @@ class Infiltrator:
     def __find_bars(self, img, filters=['canny']):
 
         bars = []
+        cut_imgs = []
         filtered = self.__filter_image(img, filters)
         
         contours, hierarchy = cv2.findContours(filtered, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -81,10 +83,10 @@ class Infiltrator:
             if not self.quali.is_histogram_valid(cut_img):
                  continue
             
-            self.__OCR_image(cut_img)
             bars.append(contour)
+            cut_imgs.append(cut_img)
 
-        return bars
+        return bars, cut_imgs
     
 
     def __draw_bar(self, img, bar):
