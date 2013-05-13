@@ -19,7 +19,7 @@ class Infiltrator:
         
         if compare:
             img2 = self.__load_image(path)
-            bars2 = self.__find_bars(img2, ['laplasjan'])
+            bars2, cut_imgs2 = self.__find_bars(img2, ['laplasjan'])
             
             for bar in bars2:
                 self.__draw_bar(img2, bar)
