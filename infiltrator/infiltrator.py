@@ -6,15 +6,26 @@ from sys import platform as _platform
 class Infiltrator:
     quali = qualifications.Qualifications()
 	
-    def process(self, path):
+    def process(self, path, compare=False):
+
         img = self.__load_image(path)
         bars = self.__find_bars(img)
-
         for bar in bars:
             self.__draw_bar(img, bar)
+        
+        self.__show_image(img, 'canny')
+        cv2.moveWindow('canny', 50, 50)
+        
+        if compare:
+            img2 = self.__load_image(path)
+            bars2 = self.__find_bars(img2, ['laplasjan'])
             
-
-        self.__show_image(img)
+            for bar in bars2:
+                self.__draw_bar(img2, bar)
+				
+            self.__show_image(img2, 'laplasjan')
+            cv2.moveWindow('laplasjan', 900, 50)
+        
         cv2.waitKey(0)
 
     def __load_image(self, path):
@@ -24,11 +35,25 @@ class Infiltrator:
             raise Exception("There is no image under: " + path)
         return img
 
-    def __find_bars(self, img):
-        bars = []
+    def __filter_image(self, img, filters):
+
         imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        canny = cv2.Canny(imgray, 100, 100)
-        contours, hierarchy = cv2.findContours(canny, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+        
+        if 'laplasjan' in filters:
+            filtered = cv2.Laplacian(imgray, cv2.IPL_DEPTH_32F, ksize = 3)
+		
+        if 'canny' in filters:
+            filtered = cv2.Canny(imgray, 100, 100)
+        
+        return filtered
+        
+
+    def __find_bars(self, img, filters=['canny']):
+
+        bars = []
+        filtered = self.__filter_image(img, filters)
+        
+        contours, hierarchy = cv2.findContours(filtered, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
 
         for contour in contours:
             # area = cv2.contourArea(contour)
@@ -60,7 +85,7 @@ class Infiltrator:
             bars.append(contour)
 
         return bars
-
+    
 
     def __draw_bar(self, img, bar):
         bound_rect = cv2.boundingRect(bar)
@@ -68,10 +93,10 @@ class Infiltrator:
         pt2 = (bound_rect[0] + bound_rect[2], bound_rect[1] + bound_rect[3])
         cv2.rectangle(img, pt1, pt2, (0, 255, 0), 2)
 
-    def __show_image(self, img):
+    def __show_image(self, img, window):
         #Pomniejszenie obrazka
         img = cv2.resize(img, (800, 600))
-        cv2.imshow('image', img)
+        cv2.imshow(window, img)
 
     def __OCR_image(self, img):
         if _platform == "win32":
