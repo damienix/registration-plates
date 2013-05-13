@@ -17,7 +17,7 @@ class TestSearch(unittest.TestCase):
         self.infiltrator = Infiltrator()
 
     def test1(self):
-        self.infiltrator.process('../img/model/DSC_0486.jpg')
+        self.infiltrator.process('../img/model/ZGR55XY.jpg')
 
     def test2(self):
         self.infiltrator.process('../img/model/P1030325.jpg')

@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 class Qualifications:
     def find_letters(self, img):
         letters = []
@@ -27,7 +28,7 @@ class Qualifications:
             for letter in letters:
                 x2, y2, w2, h2 = cv2.boundingRect(letter)
                 if self.is_intersection(x, y, x + w, y + h,
-                                          x2, y2, x2 + w2, y2 + h2):
+                                        x2, y2, x2 + w2, y2 + h2):
                     overlep = True
                     break
 
@@ -45,10 +46,10 @@ class Qualifications:
         return letters
 
     def calc_histogram(self, img):
-        
+
         if len(img.shape) != 2:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            
+
         h = np.zeros((300, 256, 3))
         cv2.equalizeHist(img)
         hist_item = cv2.calcHist([img], [0], None, [16], [0, 255])
@@ -65,15 +66,15 @@ class Qualifications:
     def is_histogram_valid(self, cut_img):
         histogram_img, histogram = self.calc_histogram(cut_img)
         histogram = list(histogram)
-        
+
         max_val = max(histogram)
         count = 0
-        
+
         for element in histogram:
-            if element>=0.5*max_val:
-                count+=1
-        
-        #Za duzo wysokich slupkow oznacza cos dzikiego :P
+            if element >= 0.5 * max_val:
+                count += 1
+
+        #Za duzo wysokich slupkow oznacza cos dzikiego :P TODO
         if count > 6:
             #cv2.imshow('histogram', histogram_img)
             #cv2.imshow('image', cut_img)
