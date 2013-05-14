@@ -4,13 +4,17 @@ import qualifications
 
 class Infiltrator:
     quali = qualifications.Qualifications()
-
+    __img = None
+    
     def process(self, path, compare=False, show=False):
 
         img = self.__load_image(path)
+        self.__img = self.__load_image(path)
         bars, cut_imgs = self.__find_bars(img)
         for bar in bars:
             self.__draw_bar(img, bar)
+            #docelowo malujemy jeden, wybrany
+            self.__draw_bar(self.__img, bar)
 
         if show:
             self.__show_image(img, 'canny')
@@ -31,8 +35,9 @@ class Infiltrator:
             cv2.waitKey(0)
         return cut_imgs
 
-    def __load_image(self, path):
-        print "Opening " + path
+    def __load_image(self, path, verbose=False):
+        if verbose:
+            print "Opening " + path
         img = cv2.imread(path)
         if img is None:
             raise Exception("There is no image under: " + path)
@@ -99,3 +104,8 @@ class Infiltrator:
         #Pomniejszenie obrazka
         img = cv2.resize(img, (800, 600))
         cv2.imshow(window, img)
+        
+    def show_image(self):
+        self.__show_image(self.__img, 'image')
+        cv2.waitKey(0)
+        

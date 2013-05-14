@@ -27,7 +27,7 @@ class Reader:
         elif _platform == "linux" or _platform == "linux2":
             args = ('/usr/bin/wine', 'OCR/tesseract.exe', 'OCR/OCR_candidate.png', 'OCR/out', 'nobatch', 'letters')
              
-        popen = subprocess.Popen(args, stdout=subprocess.PIPE)
+        popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         popen.wait()
         output = popen.stdout.read()
             
