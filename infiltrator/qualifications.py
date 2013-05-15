@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
-
+import os 
+from pytesser import *
 
 class Qualifications:
     def find_letters(self, img):
@@ -34,14 +35,31 @@ class Qualifications:
 
             if overlep:
                 continue
-
+            
+            if h < 60:
+                continue
             #self.draw_bar(imgray, contour)
+            
             letters.append(contour)
 
         # For debug
-        # if len(letters) > 0:
-        #     cv2.imshow('image', imgray)
-        #     cv2.waitKey(0)
+        if len(letters) > 0:
+        
+            #sortuj po x
+            letters.sort(key=lambda letter: letter[0,0,0])
+                        
+            i=0;
+            word = ''
+            for l in letters:
+                x, y, w, h = cv2.boundingRect(l)
+                letter = imgray[y:y+h,x:x+w]
+                cv2.imwrite(str(i)+'.tif', letter)
+                word = word + image_file_to_string(str(i)+'.tif').rstrip()
+                i+=1
+            
+            print word
+            cv2.imshow('image', imgray)
+            cv2.waitKey(0)
 
         return letters
 
