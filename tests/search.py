@@ -20,13 +20,13 @@ class TestSearch(unittest.TestCase):
         self.infiltrator.process('../img/model/ZGR55XY.jpg')
 
     def test2(self):
-        self.infiltrator.process('../img/model/P1030325.jpg')
+        self.infiltrator.process('../img/model/GD983CV.jpg')
 
     def test3(self):
-        self.infiltrator.process('../img/model/P1030292.jpg')
+        self.infiltrator.process('../img/model/DG62121.jpg')
 
     def test4(self):
-        self.infiltrator.process('../img/model/P1030332.jpg')
+        self.infiltrator.process('../img/model/GBYPC76.jpg')
 
         # TODO add some bulk tests
 

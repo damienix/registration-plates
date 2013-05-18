@@ -7,7 +7,10 @@ __author__ = 'zbiki!'
 inf = infiltrator.Infiltrator()
 reader = reader.Reader()
 
-cut_imgs = inf.process(sys.argv[1], len(sys.argv) > 3, len(sys.argv) > 2)
+compare = 'compare' in sys.argv
+show = 'show' in sys.argv
+
+cut_imgs = inf.process(sys.argv[1], compare=compare, show=show)
 #reader.readText(cut_imgs)
 
 inf.show_image()
