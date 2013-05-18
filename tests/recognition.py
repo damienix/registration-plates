@@ -1,14 +1,13 @@
 import os
 import unittest
 import cv2
-from tesseract.reader import Reader
 
 __author__ = 'damienix'
 
 
 class BulkTest(unittest.TestCase):
     def setUp(self):
-        self.reader = Reader()
+        pass
 
     def test_all(self):
         PREFIX = "../img/plate/"
