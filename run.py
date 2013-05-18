@@ -10,8 +10,8 @@ reader = reader.Reader()
 compare = 'compare' in sys.argv
 show = 'show' in sys.argv
 
-cut_imgs = inf.process(sys.argv[1], compare=compare, show=show)
-#reader.readText(cut_imgs)
+number = inf.process(sys.argv[1], compare=compare, show=show)
+print number
 
 inf.show_image()
 

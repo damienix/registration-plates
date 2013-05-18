@@ -5,8 +5,13 @@ from pytesser import *
 
 
 class Qualifications:
-    def find_letters(self, img):
+    def find_letters(self, img, fake=False, show=False):
+        """
+        @type fake: bool
+        fake -- returning fake letters speeds it up (default False)
+        """
         letters = []
+
         imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         height, width = len(img), len(img[0])
         canny = cv2.Canny(imgray, 100, 200)
@@ -26,15 +31,7 @@ class Qualifications:
             if not 0.04 < float(w) / width < 0.2:
                 continue
 
-            overlap = False
-            for letter in letters:
-                x2, y2, w2, h2 = cv2.boundingRect(letter)
-                if self.is_intersection(x, y, x + w, y + h,
-                                        x2, y2, x2 + w2, y2 + h2):
-                    overlap = True
-                    break
-
-            if overlap:
+            if self.__is_overlapping_existing_letter(letters, h, w, x, y):
                 continue
 
             if h < 60:
@@ -43,26 +40,27 @@ class Qualifications:
 
             letters.append(contour)
 
-        # For debug
+        word = ''
         if len(letters) > 0:
-
             #sortuj po x
             letters.sort(key=lambda letter: letter[0, 0, 0])
 
             i = 0
-            word = ''
             for l in letters:
-                x, y, w, h = cv2.boundingRect(l)
-                letter = imgray[y:y + h, x:x + w]
-                cv2.imwrite('tmp/%d.tif' % i, letter)
-                word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
-                i += 1
+                if not fake:
+                    x, y, w, h = cv2.boundingRect(l)
+                    letter = imgray[y:y + h, x:x + w]
+                    cv2.imwrite('tmp/%d.tif' % i, letter)
+                    word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
+                    i += 1
+                else:
+                    word += 'X'
 
-            print word
-            cv2.imshow('image', imgray)
-            cv2.waitKey(0)
+            if show:
+                cv2.imshow('image', imgray)
+                cv2.waitKey(0)
 
-        return letters
+        return word
 
     def calc_histogram(self, img):
 
@@ -102,7 +100,17 @@ class Qualifications:
             return False
         return True
 
-    def is_intersection(self, ax1, ay1, ax2, ay2, bx1, by1, bx2, by2):
+    def __is_overlapping_existing_letter(self, letters, h, w, x, y):
+        overlap = False
+        for letter in letters:
+            x2, y2, w2, h2 = cv2.boundingRect(letter)
+            if self.__is_intersection(x, y, x + w, y + h,
+                                      x2, y2, x2 + w2, y2 + h2):
+                overlap = True
+                break
+        return overlap
+
+    def __is_intersection(self, ax1, ay1, ax2, ay2, bx1, by1, bx2, by2):
 
         if (self.is_point_in_rectangle(ax1, ay1, bx1, by1, bx2, by2)
             or self.is_point_in_rectangle(ax1, ay2, bx1, by1, bx2, by2)
