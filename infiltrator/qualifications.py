@@ -5,7 +5,7 @@ from pytesser import *
 
 
 class Qualifications:
-    def find_letters(self, img, fake=False, show=False):
+    def find_letters(self, img, fake=False, show=True):
         """
         @type fake: bool
         fake -- returning fake letters speeds it up (default False)
@@ -36,10 +36,10 @@ class Qualifications:
 
             if h < 60:
                 continue
-                #self.draw_bar(imgray, contour)
+                self.draw_bar(imgray, contour)
 
             letters.append(contour)
-
+        
         word = ''
         if len(letters) > 0:
             #sortuj po x
@@ -56,11 +56,53 @@ class Qualifications:
                 else:
                     word += 'X'
 
+            angle = self.__get_plate_angle(imgray)
+            imgray = self.__rotate(imgray, angle)
             if show:
                 cv2.imshow('image', imgray)
                 cv2.waitKey(0)
+                
+            
+            
 
         return word
+        
+    def __get_plate_angle(self, img2):
+        img = np.copy(img2)
+        rows,cols = img.shape[:2]
+        
+        
+        ret, tresh = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
+        cv2.bitwise_not(tresh,img)
+        element = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3));
+        eroded = cv2.erode(img, element);
+        
+        points = []
+        for i in range(0, rows):
+            for j in range(0, cols):
+                if eroded[i,j]==0:
+                    points.append((i,j))
+
+        box = cv2.minAreaRect(np.array(points));
+        angle = box[2]
+        if (angle < -45):
+            angle += 90
+            
+        print 'Plate angle: ' + str(angle)
+        
+        return angle
+        
+    def __rotate(self, img, angle):
+    
+        rows,cols = img.shape[:2]
+        image_center = tuple(np.array(img.shape)/2)
+        rot_mat = cv2.getRotationMatrix2D((image_center[0], image_center[1]), -angle, 1)
+        result = cv2.warpAffine(img, rot_mat,(cols,rows))
+
+        #img = np.copy(result)
+        #cv2.imshow('image', img)
+        #cv2.waitKey(0)
+        return result
 
     def calc_histogram(self, img):
 
