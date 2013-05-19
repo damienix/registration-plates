@@ -1,11 +1,12 @@
 import cv2
+import tesseract
 import numpy as np
 import os
 from pytesser import *
 
 
 class Qualifications:
-    def find_letters(self, img, fake=False, show=True):
+    def find_letters(self, img, fake=False, show=False):
         """
         @type fake: bool
         fake -- returning fake letters speeds it up (default False)
@@ -40,28 +41,52 @@ class Qualifications:
 
             letters.append(contour)
         
-        word = ''
+        word = 'X'
         if len(letters) > 0:
-            #sortuj po x
+            
+            '''
             letters.sort(key=lambda letter: letter[0, 0, 0])
-
             i = 0
+            word = ''
             for l in letters:
-                if not fake:
-                    x, y, w, h = cv2.boundingRect(l)
-                    letter = imgray[y:y + h, x:x + w]
-                    cv2.imwrite('tmp/%d.tif' % i, letter)
-                    word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
-                    i += 1
-                else:
-                    word += 'X'
-
+                x, y, w, h = cv2.boundingRect(l)
+                letter = imgray[y:y + h, x:x + w]
+                cv2.imwrite('tmp/%d.tif' % i, letter)
+                word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
+                i += 1
+            '''
+            
+            
+            #print 'qrwa'
+            cv2.imshow('image', imgray)
+            cv2.waitKey(0)
+            
             angle = self.__get_plate_angle(imgray)
-            imgray = self.__rotate(imgray, angle)
+            if abs(angle) > 0.5 :
+                imgray = self.__rotate(imgray, angle)
+            
+            height, width = len(imgray), len(imgray[0])
+            
+            #imgray = imgray[y:y + height - height/10, x+width/15:x + width]
+            ret, imgray = cv2.threshold(imgray, 60, 255, cv2.THRESH_BINARY)
             if show:
                 cv2.imshow('image', imgray)
                 cv2.waitKey(0)
-                
+             
+            
+            cv2.imwrite('tmp/plate.png', imgray)
+            
+            api = tesseract.TessBaseAPI()
+            api.Init(".","eng",tesseract.OEM_DEFAULT)
+            api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+            
+            api.SetPageSegMode(tesseract.PSM_AUTO)
+            
+            image=cv2.cv.LoadImage("tmp/plate.png", cv2.cv.CV_LOAD_IMAGE_GRAYSCALE)
+            tesseract.SetCvImage(image,api)
+            word=api.GetUTF8Text()
+            #conf=api.MeanTextConf()
+            print(word)
             
             
 
