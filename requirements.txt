@@ -1,2 +1,3 @@
 Nose==1.2.1
 PIL=1.1.7
+Tesseract=0.8-1.7
