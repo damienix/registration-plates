@@ -63,10 +63,16 @@ class Qualifications:
         word = ''
         for l in letters:
             x, y, w, h = cv2.boundingRect(l)
+            #letter = imgray[y-5:y + h+5, x-5:x + w+5]
+            
             letter = imgray[y:y + h, x:x + w]
+            y, hist = self.calc_histogram(letter)
+            if sum(hist[0:8]) > 2*sum(hist[8:16]):
+                continue
             cv2.imwrite('tmp/%d.tif' % i, letter)
             word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
             i += 1
+ 
         return word
 
     def __recognize_word_new(self, imgray, show):
