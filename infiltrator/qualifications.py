@@ -1,7 +1,6 @@
 import cv2
 import tesseract
 import numpy as np
-import os
 from pytesser import *
 
 
@@ -37,92 +36,92 @@ class Qualifications:
 
             if h < 60:
                 continue
-                self.draw_bar(imgray, contour)
+                #self.draw_bar(imgray, contour)
 
             letters.append(contour)
-        
-        word = 'X'
+
+        word = ''
         if len(letters) > 0:
-            
-            '''
-            letters.sort(key=lambda letter: letter[0, 0, 0])
-            i = 0
-            word = ''
-            for l in letters:
-                x, y, w, h = cv2.boundingRect(l)
-                letter = imgray[y:y + h, x:x + w]
-                cv2.imwrite('tmp/%d.tif' % i, letter)
-                word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
-                i += 1
-            '''
-            
-            
-            #print 'qrwa'
-            cv2.imshow('image', imgray)
-            cv2.waitKey(0)
-            
-            angle = self.__get_plate_angle(imgray)
-            if abs(angle) > 0.5 :
-                imgray = self.__rotate(imgray, angle)
-            
-            height, width = len(imgray), len(imgray[0])
-            
-            #imgray = imgray[y:y + height - height/10, x+width/15:x + width]
-            ret, imgray = cv2.threshold(imgray, 60, 255, cv2.THRESH_BINARY)
-            if show:
-                cv2.imshow('image', imgray)
-                cv2.waitKey(0)
-             
-            
-            cv2.imwrite('tmp/plate.png', imgray)
-            
-            api = tesseract.TessBaseAPI()
-            api.Init(".","eng",tesseract.OEM_DEFAULT)
-            api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-            
-            api.SetPageSegMode(tesseract.PSM_AUTO)
-            
-            image=cv2.cv.LoadImage("tmp/plate.png", cv2.cv.CV_LOAD_IMAGE_GRAYSCALE)
-            tesseract.SetCvImage(image,api)
-            word=api.GetUTF8Text()
-            #conf=api.MeanTextConf()
-            print(word)
-            
-            
+
+            if fake:
+                word = 'X' * len(letters)
+            else:
+                word = self.__recognize_word(letters, imgray, show)
 
         return word
-        
+
+    def __recognize_word(self, letters, imgray, show):
+
+        word = self.__recognize_word_old(imgray, letters)
+        # word = self.__recognize_word_new(imgray, show)
+        print(word)
+        return word
+
+    def __recognize_word_old(self, imgray, letters):
+        letters.sort(key=lambda letter: letter[0, 0, 0])
+        i = 0
+        word = ''
+        for l in letters:
+            x, y, w, h = cv2.boundingRect(l)
+            letter = imgray[y:y + h, x:x + w]
+            cv2.imwrite('tmp/%d.tif' % i, letter)
+            word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
+            i += 1
+        return word
+
+    def __recognize_word_new(self, imgray, show):
+        cv2.imshow('image', imgray)
+        cv2.waitKey(0)
+        angle = self.__get_plate_angle(imgray)
+        if abs(angle) > 0.5:
+            imgray = self.__rotate(imgray, angle)
+        height, width = len(imgray), len(imgray[0])
+        #imgray = imgray[y:y + height - height/10, x+width/15:x + width]
+        ret, imgray = cv2.threshold(imgray, 60, 255, cv2.THRESH_BINARY)
+        if show:
+            cv2.imshow('image', imgray)
+            cv2.waitKey(0)
+        cv2.imwrite('tmp/plate.png', imgray)
+        api = tesseract.TessBaseAPI()
+        api.Init(".", "eng", tesseract.OEM_DEFAULT)
+        api.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+        api.SetPageSegMode(tesseract.PSM_AUTO)
+        image = cv2.cv.LoadImage("tmp/plate.png", cv2.cv.CV_LOAD_IMAGE_GRAYSCALE)
+        tesseract.SetCvImage(image, api)
+        word = api.GetUTF8Text()
+        #conf=api.MeanTextConf()
+        return word
+
     def __get_plate_angle(self, img2):
         img = np.copy(img2)
-        rows,cols = img.shape[:2]
-        
-        
+        rows, cols = img.shape[:2]
+
         ret, tresh = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
-        cv2.bitwise_not(tresh,img)
+        cv2.bitwise_not(tresh, img)
         element = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3));
         eroded = cv2.erode(img, element);
-        
+
         points = []
         for i in range(0, rows):
             for j in range(0, cols):
-                if eroded[i,j]==0:
-                    points.append((i , j))
+                if eroded[i, j] == 0:
+                    points.append((i, j))
 
-        box = cv2.minAreaRect(np.array([points],dtype=np.int32));
+        box = cv2.minAreaRect(np.array([points], dtype=np.int32));
         angle = box[2]
         if (angle < -45):
             angle += 90
-            
+
         print 'Plate angle: ' + str(angle)
-        
+
         return angle
-        
+
     def __rotate(self, img, angle):
-    
-        rows,cols = img.shape[:2]
-        image_center = tuple(np.array(img.shape)/2)
+
+        rows, cols = img.shape[:2]
+        image_center = tuple(np.array(img.shape) / 2)
         rot_mat = cv2.getRotationMatrix2D((image_center[0], image_center[1]), -angle, 1)
-        result = cv2.warpAffine(img, rot_mat,(cols,rows))
+        result = cv2.warpAffine(img, rot_mat, (cols, rows))
 
         #img = np.copy(result)
         #cv2.imshow('image', img)
