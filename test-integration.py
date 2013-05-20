@@ -31,18 +31,16 @@ class BulkTest(unittest.TestCase):
             else:
                 recognized_count += 1
 
-            if all_count > 15:
-                break
-
         for fail in failed:
             print 'Actual:     %s' % fail['img']
             print 'Recognized: %s' % fail['n']
 
         print "Statistics:"
+        print "  Total          : %d" % all_count
         print "  Correct        : %d" % recognized_count
         print "  Not recognized : %d" % not_recognized_count
         print "  Fail           : %d" % len(failed)
-        print "  Error ratio    : %d" % (float(len(failed)) / all_count)
-        print "  Success ratio  : %d" % (float(recognized_count) / all_count)
+        print "  Error ratio    : %.2f" % (float(len(failed)) / all_count)
+        print "  Success ratio  : %.2f" % (float(recognized_count) / all_count)
         self.assertEqual(len(failed), 0, "More than one plate found in some images.")
 
