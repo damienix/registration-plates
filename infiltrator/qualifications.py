@@ -98,8 +98,8 @@ class Qualifications:
 
         ret, tresh = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
         cv2.bitwise_not(tresh, img)
-        element = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3));
-        eroded = cv2.erode(img, element);
+        element = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3))
+        eroded = cv2.erode(img, element)
 
         points = []
         for i in range(0, rows):
@@ -107,9 +107,9 @@ class Qualifications:
                 if eroded[i, j] == 0:
                     points.append((i, j))
 
-        box = cv2.minAreaRect(np.array([points], dtype=np.int32));
+        box = cv2.minAreaRect(np.array([points], dtype=np.int32))
         angle = box[2]
-        if (angle < -45):
+        if angle < -45:
             angle += 90
 
         print 'Plate angle: ' + str(angle)

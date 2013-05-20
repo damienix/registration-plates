@@ -40,8 +40,11 @@ class BulkTest(unittest.TestCase):
 
         failed = []
 
+        print os.listdir(PREFIX)
+
         for image in os.listdir(PREFIX):
-            found_num = len(self.infiltrator.process(PREFIX + image))
+            print "Image: %s" % image
+            found_num = len(self.infiltrator.process(os.path.join('img', 'model', image)))
             if found_num > 1:
                 failed.append({'img': image, 'n': found_num})
 
