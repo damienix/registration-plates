@@ -106,9 +106,9 @@ class Qualifications:
         for i in range(0, rows):
             for j in range(0, cols):
                 if eroded[i,j]==0:
-                    points.append((i,j))
+                    points.append((i , j))
 
-        box = cv2.minAreaRect(np.array(points));
+        box = cv2.minAreaRect(np.array([points],dtype=np.int32));
         angle = box[2]
         if (angle < -45):
             angle += 90
