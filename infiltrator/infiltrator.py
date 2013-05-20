@@ -1,4 +1,5 @@
 import cv2
+import os
 import re
 import qualifications
 
@@ -35,18 +36,7 @@ class Infiltrator:
                 self.__show_image(img2, 'laplasjan')
                 cv2.moveWindow('laplasjan', 900, 50)
 
-        # Create map of possible words
-        for bar_img in cut_imgs:
-            word = self.quali.find_letters(bar_img, show)
-            word = self.__remove_special_chars(word)
-            if __debug__:
-                print "Validating: %s" % word
-            if self.__can_be_plate(word):
-                if word in possible_numbers:
-                    possible_numbers[word] += 1
-                else:
-                    possible_numbers[word] = 1
-
+        possible_numbers = self.__get_possible_numbers(cut_imgs, show)
         print possible_numbers
 
         if len(possible_numbers) == 1:
@@ -58,11 +48,14 @@ class Infiltrator:
         return return_number
 
     def __load_image(self, path, verbose=False):
+        root_path = os.path.dirname(os.path.dirname(__file__))
+        full_path = os.path.join(root_path, path)
+        print "Opening " + full_path
         if verbose:
-            print "Opening " + path
-        img = cv2.imread(path)
+            print "Opening " + full_path
+        img = cv2.imread(full_path)
         if img is None:
-            raise Exception("There is no image under: " + path)
+            raise Exception("There is no image under: " + full_path)
         return img
 
     def __filter_image(self, img, filters):
@@ -130,6 +123,20 @@ class Infiltrator:
     def show_image(self):
         self.__show_image(self.__img, 'image')
         cv2.waitKey(0)
+
+    def __get_possible_numbers(self, cut_imgs, show):
+        possible_numbers = {}
+        for bar_img in cut_imgs:
+            word = self.quali.find_letters(bar_img, show)
+            word = self.__remove_special_chars(word)
+            if __debug__:
+                print "Validating: %s" % word
+            if self.__can_be_plate(word):
+                if word in possible_numbers:
+                    possible_numbers[word] += 1
+                else:
+                    possible_numbers[word] = 1
+        return possible_numbers
 
     def __can_be_plate(self, word):
         #return True
