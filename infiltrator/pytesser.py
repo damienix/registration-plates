@@ -11,7 +11,7 @@ import errors
 
 from sys import platform as _platform_
 
-tesseract_exe_name = 'tesseract' # Name of executable to be called at command line
+tesseract_exe_name = 'pytesser/tesseract' # Name of executable to be called at command line
 scratch_image_name = "temp.bmp" # This file must be .bmp or other Tesseract-compatible format
 scratch_text_name_root = "temp" # Leave out the .txt extension
 cleanup_scratch_flag = True  # Temporary files cleaned up after OCR operation
@@ -21,9 +21,9 @@ def call_tesseract(input_filename, output_filename):
     """Calls external tesseract.exe on input file (restrictions on types),
     outputting output_filename+'txt'"""
     if _platform_=='linux' or _platform_=='linux2':
-        args = ['/usr/bin/wine', tesseract_exe_name, input_filename, output_filename]
+        args = ['/usr/bin/wine', tesseract_exe_name, input_filename, output_filename, 'nobatch', 'letters']
     else:
-        args = [tesseract_exe_name, input_filename, output_filename]
+        args = [tesseract_exe_name, input_filename, output_filename, 'nobatch', 'letters']
     proc = subprocess.Popen(args)
     retcode = proc.wait()
     if retcode != 0:
