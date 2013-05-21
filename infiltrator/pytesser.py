@@ -21,9 +21,9 @@ def call_tesseract(input_filename, output_filename):
     """Calls external tesseract.exe on input file (restrictions on types),
     outputting output_filename+'txt'"""
     if _platform_=='linux' or _platform_=='linux2':
-        args = ['/usr/bin/wine', tesseract_exe_name, input_filename, output_filename, 'nobatch', 'letters']
+        args = ['/usr/bin/wine', tesseract_exe_name, input_filename, output_filename]
     else:
-        args = [tesseract_exe_name, input_filename, output_filename, 'nobatch', 'letters']
+        args = [tesseract_exe_name, input_filename, output_filename]
     proc = subprocess.Popen(args)
     retcode = proc.wait()
     if retcode != 0:
