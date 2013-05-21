@@ -63,14 +63,31 @@ class Qualifications:
         word = ''
         for l in letters:
             x, y, w, h = cv2.boundingRect(l)
-            #letter = imgray[y-5:y + h+5, x-5:x + w+5]
+            dx = 5
+            dy = 5
+            letter = imgray[y-dy:y + h+dy, x-dx:x + w+dx]
+            #letter = imgray[y-dy:y + h+dy, x-dx:x + w+dx]
             
-            letter = imgray[y:y + h, x:x + w]
-            y, hist = self.calc_histogram(letter)
+            #letter = imgray[y:y + h, x:x + w]
+            #
+            z, hist = self.calc_histogram(letter)
             if sum(hist[0:8]) > 2*sum(hist[8:16]):
                 continue
             cv2.imwrite('tmp/%d.tif' % i, letter)
-            word = word + image_file_to_string('tmp/%d.tif' % i).rstrip()
+            ltr = image_file_to_string('tmp/%d.tif' % i).rstrip()
+            #print ltr
+            if not ltr.isalnum():
+                dx = 15
+                dy = 15
+                #print 'tutaj'
+                #print y, x, dx, dy
+                letter = imgray[y-dy:y + h+dy, x-dx:x + w+dx]
+                cv2.imwrite('tmp/%d.tif' % i, letter)
+                ltr = image_file_to_string('tmp/%d.tif' % i).rstrip()
+            #print ltr
+            #cv2.imshow('window', letter)
+            #cv2.waitKey(0);
+            word = word + ltr
             i += 1
  
         return word
@@ -140,7 +157,7 @@ class Qualifications:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         h = np.zeros((300, 256, 3))
-        cv2.equalizeHist(img)
+        #cv2.equalizeHist(img)
         hist_item = cv2.calcHist([img], [0], None, [16], [0, 255])
         cv2.normalize(hist_item, hist_item, 0, 255, cv2.NORM_MINMAX)
         hist = np.int32(np.around(hist_item))

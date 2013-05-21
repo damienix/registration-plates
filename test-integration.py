@@ -10,7 +10,7 @@ class BulkTest(unittest.TestCase):
         self.infiltrator = Infiltrator()
 
     def test_all(self):
-        PREFIX = os.path.join("img", "model")
+        PREFIX = os.path.join("img", "dzisiaj")
 
         failed = []
         recognized_count = 0
@@ -22,8 +22,10 @@ class BulkTest(unittest.TestCase):
             print "Image: %s" % image
 
             actual = os.path.splitext(image)[0]
-            recognized = self.infiltrator.process(os.path.join(PREFIX, image), compare=False, show=False)
-
+            try:
+                recognized = self.infiltrator.process(os.path.join(PREFIX, image), compare=False, show=False)
+            except:
+                recognized = None;
             if not recognized:
                 not_recognized_count += 1
             elif actual != recognized:
