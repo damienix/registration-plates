@@ -4,7 +4,7 @@ from pytesser import *
 
 
 class Qualifications:
-    def find_letters(self, img, fake=False, show=False):
+    def find_letters(self, img, show=False, fake=False):
         """
         @type fake: bool
         fake -- returning fake letters speeds it up (default False)
@@ -38,7 +38,6 @@ class Qualifications:
                 #self.draw_bar(imgray, contour)
 
             letters.append(contour)
-
         word = ''
         if len(letters) > 0:
 

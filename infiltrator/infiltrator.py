@@ -55,7 +55,7 @@ class Infiltrator:
             print "Opening " + full_path
         img = cv2.imread(full_path)
         if img is None:
-            raise Exception("There is no image under: " + full_path)
+            raise Exception("There is no image under: " + full_path)            
         return img
 
     def __filter_image(self, img, filters):
@@ -98,7 +98,7 @@ class Infiltrator:
             if not self.quali.is_histogram_valid(cut_img):
                 continue
 
-            num_of_letters = len(self.quali.find_letters(cut_img, fake=True))
+            num_of_letters = len(self.quali.find_letters(cut_img, show=False, fake=True))
             #print "Letters: " + str(num_of_letters)
             if not 4 <= num_of_letters < 9:
                 continue
@@ -126,8 +126,8 @@ class Infiltrator:
 
     def __get_possible_numbers(self, cut_imgs, show):
         possible_numbers = {}
-        for bar_img in cut_imgs:
-            word = self.quali.find_letters(bar_img, show)
+        for bar_img in cut_imgs:            
+            word = self.quali.find_letters(bar_img, show)            
             word = self.__remove_special_chars(word)
             if __debug__:
                 print "Validating: %s" % word
