@@ -52,7 +52,8 @@ class Qualifications:
 
         word = self.__recognize_word_old(imgray, letters)
         # word = self.__recognize_word_new(imgray, show)
-        print(word)
+        if len(word) is not 0:            
+            print "Recognized: " + word
         return word
 
     def __recognize_word_old(self, imgray, letters):
@@ -188,7 +189,7 @@ class Qualifications:
             #cv2.imshow('histogram', histogram_img)
             #cv2.imshow('image', cut_img)
             #cv2.waitKey(0)
-            print 'rejecting'
+            #print '- rejecting!'
             return False
         return True
 

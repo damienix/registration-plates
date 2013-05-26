@@ -11,7 +11,7 @@ class Infiltrator:
     def process(self, path, compare=False, show=False):
 
         img = self.__load_image(path)
-        self.__img = self.__load_image(path)
+        self.__img = img #self.__load_image(path)
         bars, cut_imgs = self.__find_bars(img, ['laplasjan']) # TODO cany was default
         possible_numbers = {}
         return_number = None
@@ -50,9 +50,7 @@ class Infiltrator:
     def __load_image(self, path, verbose=False):
         root_path = os.path.dirname(os.path.dirname(__file__))
         full_path = os.path.join(root_path, path)
-        print "Opening " + full_path
-        if verbose:
-            print "Opening " + full_path
+        print "Opening: " + full_path
         img = cv2.imread(full_path)
         if img is None:
             raise Exception("There is no image under: " + full_path)            
@@ -129,17 +127,21 @@ class Infiltrator:
         for bar_img in cut_imgs:            
             word = self.quali.find_letters(bar_img, show)   
             word = self.__remove_special_chars(word)
-            if __debug__:
-                print "Validating: %s" % word
+            if len(word) is 0:
+                continue
             if self.__can_be_plate(word):
+                print " - OK!"
                 if word in possible_numbers:
                     possible_numbers[word] += 1
                 else:
                     possible_numbers[word] = 1
+            else:
+                print " - failed!"
         return possible_numbers
 
     def __can_be_plate(self, word):
         #return True
+        #pattern = re.compile("^([a-z]{2}\w{5}|[a-z]{2}\w{4}|[a-z]{3}\w{4})$", re.IGNORECASE)
         pattern = re.compile("^([a-z]{2}\w{5}|[a-z]{3}\w{4})$", re.IGNORECASE)
         result = pattern.search(word)
         if not result:

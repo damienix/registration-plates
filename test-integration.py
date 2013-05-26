@@ -1,6 +1,7 @@
 import os
 import unittest
 from infiltrator.infiltrator import Infiltrator
+import sys
 
 __author__ = 'damienix'
 
@@ -11,15 +12,19 @@ class BulkTest(unittest.TestCase):
 
     def test_all(self):
         PREFIX = os.path.join("img", "dzisiaj")
-
+        
         failed = []
         recognized_count = 0
         not_recognized_count = 0
-        all_count = 0
-
-        for image in os.listdir(PREFIX):
+        all_count = 0        
+        
+        listDirectory = os.listdir(PREFIX)
+        total = len(listDirectory)
+        
+        for image in listDirectory:
             all_count += 1
-            print "Image: %s" % image
+            print "------------------------------------------"
+            print "Image %d/%d: %s" % (all_count, total, image)
 
             actual = os.path.splitext(image)[0]
             try:
@@ -32,11 +37,15 @@ class BulkTest(unittest.TestCase):
                 failed.append({'img': actual, 'n': recognized})
             else:
                 recognized_count += 1
+                
 
+        print "=========================================="
+        print "False positives:"
         for fail in failed:
             print 'Actual:     %s' % fail['img']
             print 'Recognized: %s' % fail['n']
 
+        print "=========================================="
         print "Statistics:"
         print "  Total          : %d" % all_count
         print "  Correct        : %d" % recognized_count
