@@ -1,5 +1,4 @@
 import cv2
-import tesseract
 import numpy as np
 from pytesser import *
 
