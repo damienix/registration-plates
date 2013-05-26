@@ -65,12 +65,15 @@ class Qualifications:
             dy = 5
             letter = imgray[y-dy:y + h+dy, x-dx:x + w+dx]
             #letter = imgray[y-dy:y + h+dy, x-dx:x + w+dx]
-            
+            if letter.shape[0] is 0 or letter.shape[1] is 0:
+                continue
+                
             #letter = imgray[y:y + h, x:x + w]
             #
             z, hist = self.calc_histogram(letter)
             if sum(hist[0:8]) > 2*sum(hist[8:16]):
                 continue
+                
             cv2.imwrite('tmp/%d.tif' % i, letter)
             ltr = image_file_to_string('tmp/%d.tif' % i).rstrip()
             #print ltr
@@ -80,6 +83,8 @@ class Qualifications:
                 #print 'tutaj'
                 #print y, x, dx, dy
                 letter = imgray[y-dy:y + h+dy, x-dx:x + w+dx]
+                if letter.shape[0] is 0 or letter.shape[1] is 0:
+                    continue
                 cv2.imwrite('tmp/%d.tif' % i, letter)
                 ltr = image_file_to_string('tmp/%d.tif' % i).rstrip()
             #print ltr
@@ -209,7 +214,6 @@ class Qualifications:
             or self.is_point_in_rectangle(bx2, by2, ax1, ay1, ax2, ay2)):
             return True
         return False
-
 
     def is_point_in_rectangle(self, x, y, rx1, ry1, rx2, ry2):
         return rx1 <= x <= rx2 and ry1 <= y <= ry2

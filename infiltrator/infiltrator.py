@@ -127,7 +127,7 @@ class Infiltrator:
     def __get_possible_numbers(self, cut_imgs, show):
         possible_numbers = {}
         for bar_img in cut_imgs:            
-            word = self.quali.find_letters(bar_img, show)            
+            word = self.quali.find_letters(bar_img, show)   
             word = self.__remove_special_chars(word)
             if __debug__:
                 print "Validating: %s" % word
