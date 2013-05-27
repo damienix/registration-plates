@@ -1,0 +1,13 @@
+d_small: 4, d_big: 15, canny_low: 120, canny_high: 210 -> total: 8, correct: 3, not recognized: 5, fail: 0, error rate: 0.00, success rate: 0.38
+d_small: 4, d_big: 15, canny_low: 120, canny_high: 220 -> total: 8, correct: 3, not recognized: 5, fail: 0, error rate: 0.00, success rate: 0.38
+d_small: 4, d_big: 15, canny_low: 120, canny_high: 230 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 120, canny_high: 240 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 130, canny_high: 210 -> total: 8, correct: 3, not recognized: 5, fail: 0, error rate: 0.00, success rate: 0.38
+d_small: 4, d_big: 15, canny_low: 130, canny_high: 220 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 130, canny_high: 230 -> total: 8, correct: 2, not recognized: 6, fail: 0, error rate: 0.00, success rate: 0.25
+d_small: 4, d_big: 15, canny_low: 130, canny_high: 240 -> total: 8, correct: 5, not recognized: 2, fail: 1, error rate: 0.12, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 140, canny_high: 210 -> total: 8, correct: 3, not recognized: 5, fail: 0, error rate: 0.00, success rate: 0.38
+d_small: 4, d_big: 15, canny_low: 140, canny_high: 220 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 140, canny_high: 230 -> total: 8, correct: 3, not recognized: 5, fail: 0, error rate: 0.00, success rate: 0.38
+d_small: 4, d_big: 15, canny_low: 140, canny_high: 240 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+total: 12

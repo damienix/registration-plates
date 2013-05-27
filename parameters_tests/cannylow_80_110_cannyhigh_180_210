@@ -1,0 +1,17 @@
+d_small: 4, d_big: 15, canny_low: 80, canny_high: 180 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 80, canny_high: 190 -> total: 8, correct: 1, not recognized: 7, fail: 0, error rate: 0.00, success rate: 0.12
+d_small: 4, d_big: 15, canny_low: 80, canny_high: 200 -> total: 8, correct: 1, not recognized: 7, fail: 0, error rate: 0.00, success rate: 0.12
+d_small: 4, d_big: 15, canny_low: 80, canny_high: 210 -> total: 8, correct: 0, not recognized: 8, fail: 0, error rate: 0.00, success rate: 0.00
+d_small: 4, d_big: 15, canny_low: 90, canny_high: 180 -> total: 8, correct: 0, not recognized: 7, fail: 1, error rate: 0.12, success rate: 0.00
+d_small: 4, d_big: 15, canny_low: 90, canny_high: 190 -> total: 8, correct: 1, not recognized: 7, fail: 0, error rate: 0.00, success rate: 0.12
+d_small: 4, d_big: 15, canny_low: 90, canny_high: 200 -> total: 8, correct: 1, not recognized: 7, fail: 0, error rate: 0.00, success rate: 0.12
+d_small: 4, d_big: 15, canny_low: 90, canny_high: 210 -> total: 8, correct: 0, not recognized: 8, fail: 0, error rate: 0.00, success rate: 0.00
+d_small: 4, d_big: 15, canny_low: 100, canny_high: 180 -> total: 8, correct: 1, not recognized: 7, fail: 0, error rate: 0.00, success rate: 0.12
+d_small: 4, d_big: 15, canny_low: 100, canny_high: 190 -> total: 8, correct: 0, not recognized: 8, fail: 0, error rate: 0.00, success rate: 0.00
+d_small: 4, d_big: 15, canny_low: 100, canny_high: 200 -> total: 8, correct: 1, not recognized: 7, fail: 0, error rate: 0.00, success rate: 0.12
+d_small: 4, d_big: 15, canny_low: 100, canny_high: 210 -> total: 8, correct: 0, not recognized: 8, fail: 0, error rate: 0.00, success rate: 0.00
+d_small: 4, d_big: 15, canny_low: 110, canny_high: 180 -> total: 8, correct: 0, not recognized: 8, fail: 0, error rate: 0.00, success rate: 0.00
+d_small: 4, d_big: 15, canny_low: 110, canny_high: 190 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 110, canny_high: 200 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+d_small: 4, d_big: 15, canny_low: 110, canny_high: 210 -> total: 8, correct: 5, not recognized: 3, fail: 0, error rate: 0.00, success rate: 0.62
+total: 16

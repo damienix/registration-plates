@@ -4,6 +4,8 @@ from pytesser import *
 
 
 class Qualifications:
+
+    
     def find_letters(self, img, show=False, fake=False):
         """
         @type fake: bool
@@ -13,7 +15,7 @@ class Qualifications:
 
         imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         height, width = len(img), len(img[0])
-        canny = cv2.Canny(imgray, 100, 200)
+        canny = cv2.Canny(imgray, 125, 240)
         contours, hierarchy = cv2.findContours(canny, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
 
         for contour in contours:
@@ -52,8 +54,8 @@ class Qualifications:
 
         word = self.__recognize_word_old(imgray, letters)
         # word = self.__recognize_word_new(imgray, show)
-        if len(word) is not 0:            
-            print "Recognized: " + word
+        #if len(word) is not 0:            
+        print "Recognized: " + word
         return word
 
     def __recognize_word_old(self, imgray, letters):
@@ -181,11 +183,11 @@ class Qualifications:
         count = 0
 
         for element in histogram:
-            if element >= 0.5 * max_val:
+            if element >= 0.7 * max_val:
                 count += 1
 
         #Za duzo wysokich slupkow oznacza cos dzikiego :P TODO
-        if count > 6:
+        if count > 5:
             #cv2.imshow('histogram', histogram_img)
             #cv2.imshow('image', cut_img)
             #cv2.waitKey(0)
